@@ -6,75 +6,100 @@ Public Class Form1
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
         Dim _mesageBin = readSplit()
         _mesageBin = Encrypt(_mesageBin)
+        TextBox2.Text = BtoC(_mesageBin)
         _mesageBin = Decrypt(_mesageBin)
+        TextBox3.Text = BtoC(_mesageBin)
        
       
     End Sub
 
     Function Encrypt(_mesageBin As String)
 
+        MessageBox.Show("Your Message is:" & vbLf & BtoC(_mesageBin))
         key.KeyF()
 
         Dim Tab_P_Box = Numbers_Generate(32, 200, "TableIP", True)
         SboxClass.FillSBOXES()
-        Dim Left = Mid(_mesageBin, 1, 32)
-        Dim Right = Mid(_mesageBin, 33, 32)
+        Dim spliterParts As String = ""
+        Dim Stack As String = ""
+        Dim left
+        Dim right
 
-        MessageBox.Show("Your Message is:" & vbLf & BtoC(_mesageBin))
-        For i = 1 To 16
+        For j = 1 To _mesageBin.Length Step 64
 
-            '1 Expand
-            Right = splitit(Right)
+            spliterParts = Mid(_mesageBin, j, 64)
 
-            '2 Xor
-            Right = XorOperation(Right, key.Key(i - 1), 48)
-            Right = splitit(Right)
+            left = Mid(spliterParts, 1, 32)
+            right = Mid(spliterParts, 33, 32)
 
-            '3 sbox
-            Right = SboxClass.RealProcess(Right, i)
+            For i = 1 To 16
+
+                '1 Expand
+                right = splitit(right)
+
+                '2 Xor
+                right = XorOperation(right, key.Key(i - 1), 48)
+                right = splitit(right)
+
+                '3 sbox
+                right = SboxClass.RealProcess(right, i)
 
 
-            '4 P_Boxes
-            Right = Ip_Procces_Encryption(Tab_P_Box, Right)
+                '4 P_Boxes
+                right = Ip_Procces_Encryption(Tab_P_Box, right)
 
-            Left = XorOperation(Left, Right, 32)
+                left = XorOperation(left, right, 32)
 
-            _mesageBin = Right & Left
-            Left = Mid(_mesageBin, 1, 32)
-            Right = Mid(_mesageBin, 33, 32)
+                spliterParts = right & left
+                left = Mid(spliterParts, 1, 32)
+                right = Mid(spliterParts, 33, 32)
 
+            Next
+            Stack &= spliterParts
         Next
-        MessageBox.Show("Your Encrypted Message is:" & vbLf & BtoC(_mesageBin))
+        
+        MessageBox.Show("Your Encrypted Message is:" & vbLf & BtoC(Stack))
 
-        Return _mesageBin
+        Return Stack
     End Function
 
     Function Decrypt(_mesageBin As String)
         Dim Tab_P_Box = Numbers_Generate(32, 200, "TableIP", True)
-        Dim Left = Mid(_mesageBin, 1, 32)
-        Dim Right = Mid(_mesageBin, 33, 32)
+        Dim spliterParts As String = ""
+        Dim decrypter As String = ""
+        Dim left
+        Dim right
 
-        For i = 16 To 1 Step -1
-            'Decrypt
-            _mesageBin = Right & Left
-            Left = Mid(_mesageBin, 1, 32)
-            Right = Mid(_mesageBin, 33, 32)
+        For j = 1 To _mesageBin.Length Step 64
 
-            Left = XorOperation(Left, Right, 32)
-            Right = INV_Order(Tab_P_Box, Right)
-            Right = SboxClass.RealProcess(Right, i, True)
+            spliterParts = Mid(_mesageBin, j, 64)
 
-            Right = splitit(Right)
-            Right = XorOperation(Right, key.Key(i - 1), 48)
-            Right = splitit(Right)
+            left = Mid(spliterParts, 1, 32)
+            right = Mid(spliterParts, 33, 32)
+
+            For i = 16 To 1 Step -1
+                'Decrypt
+                spliterParts = right & left
+                left = Mid(spliterParts, 1, 32)
+                right = Mid(spliterParts, 33, 32)
+
+                left = XorOperation(left, right, 32)
+                right = INV_Order(Tab_P_Box, right)
+                right = SboxClass.RealProcess(right, i, True)
+
+                right = splitit(right)
+                right = XorOperation(right, key.Key(i - 1), 48)
+                right = splitit(right)
 
 
 
-            '     RichTextBox1.Text += BtoC(Left & Right) & vbLf
+                '     RichTextBox1.Text += BtoC(Left & Right) & vbLf
+            Next
+            decrypter &= left & right
         Next
-        _mesageBin = Left & Right
-        MessageBox.Show("Your Decrypted Message is:" & vbLf & BtoC(_mesageBin))
-        Return _mesageBin
+
+        MessageBox.Show("Your Decrypted Message is:" & vbLf & BtoC(decrypter))
+        Return decrypter
     End Function
 
     Function readSplit()
@@ -82,9 +107,9 @@ Public Class Form1
         Dim spliter As String = ""
         Dim AscValue As Integer = 0
         Dim stored As String = ""
-        Dim MyOrgString = InputBox("Input Your message")
+        Dim MyOrgString = TextBox1.Text
 
-        While MyOrgString.Length < 8
+        While MyOrgString.Length Mod 8 <> 0 OrElse MyOrgString.Length = 0
             MyOrgString += " "
         End While
 
