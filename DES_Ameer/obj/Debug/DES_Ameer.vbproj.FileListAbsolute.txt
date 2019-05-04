@@ -1,0 +1,20 @@
+c:\users\ameer\documents\visual studio 2013\Projects\DES_Ameer\DES_Ameer\bin\Debug\DES_Ameer.exe.config
+c:\users\ameer\documents\visual studio 2013\Projects\DES_Ameer\DES_Ameer\bin\Debug\DES_Ameer.exe
+c:\users\ameer\documents\visual studio 2013\Projects\DES_Ameer\DES_Ameer\bin\Debug\DES_Ameer.pdb
+c:\users\ameer\documents\visual studio 2013\Projects\DES_Ameer\DES_Ameer\bin\Debug\DES_Ameer.xml
+c:\users\ameer\documents\visual studio 2013\Projects\DES_Ameer\DES_Ameer\obj\Debug\DES_Ameer.Form1.resources
+c:\users\ameer\documents\visual studio 2013\Projects\DES_Ameer\DES_Ameer\obj\Debug\DES_Ameer.Resources.resources
+c:\users\ameer\documents\visual studio 2013\Projects\DES_Ameer\DES_Ameer\obj\Debug\DES_Ameer.vbproj.GenerateResource.Cache
+c:\users\ameer\documents\visual studio 2013\Projects\DES_Ameer\DES_Ameer\obj\Debug\DES_Ameer.exe
+c:\users\ameer\documents\visual studio 2013\Projects\DES_Ameer\DES_Ameer\obj\Debug\DES_Ameer.xml
+c:\users\ameer\documents\visual studio 2013\Projects\DES_Ameer\DES_Ameer\obj\Debug\DES_Ameer.pdb
+C:\Users\Ameer\Documents\Visual Studio 2013\Projects\DES_Ameer - Copy\DES_Ameer\bin\Debug\DES_Ameer.exe.config
+C:\Users\Ameer\Documents\Visual Studio 2013\Projects\DES_Ameer - Copy\DES_Ameer\obj\Debug\DES_Ameer.exe
+C:\Users\Ameer\Documents\Visual Studio 2013\Projects\DES_Ameer - Copy\DES_Ameer\obj\Debug\DES_Ameer.xml
+C:\Users\Ameer\Documents\Visual Studio 2013\Projects\DES_Ameer - Copy\DES_Ameer\obj\Debug\DES_Ameer.pdb
+C:\Users\Ameer\Documents\Visual Studio 2013\Projects\DES_Ameer - Copy\DES_Ameer\bin\Debug\DES_Ameer.exe
+C:\Users\Ameer\Documents\Visual Studio 2013\Projects\DES_Ameer - Copy\DES_Ameer\bin\Debug\DES_Ameer.pdb
+C:\Users\Ameer\Documents\Visual Studio 2013\Projects\DES_Ameer - Copy\DES_Ameer\bin\Debug\DES_Ameer.xml
+C:\Users\Ameer\Documents\Visual Studio 2013\Projects\DES_Ameer - Copy\DES_Ameer\obj\Debug\DES_Ameer.Form1.resources
+C:\Users\Ameer\Documents\Visual Studio 2013\Projects\DES_Ameer - Copy\DES_Ameer\obj\Debug\DES_Ameer.Resources.resources
+C:\Users\Ameer\Documents\Visual Studio 2013\Projects\DES_Ameer - Copy\DES_Ameer\obj\Debug\DES_Ameer.vbproj.GenerateResource.Cache
