@@ -1,25 +1,41 @@
 ﻿'Imports System.Text.RegularExpressions
 
+Imports System.Text.RegularExpressions
+
 Public Class Form1
 
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
-        Dim _mesageBin = readSplit()
-        _mesageBin = Encrypt(_mesageBin)
-        TextBox2.Text = BtoC(_mesageBin)
-        _mesageBin = Decrypt(_mesageBin)
-        TextBox3.Text = BtoC(_mesageBin)
-       
-      
+        If (TextBox4.Text.Length = 0 And Regex.IsMatch(TextBox4.Text.Trim, "\A-{0,1}[0-9.]*\Z")) Then
+            MessageBox.Show("Enter message into Chaos input box")
+            Return
+        End If
+
+        key.KeyF(TextBox4.Text)
+        SboxClass.FillSBOXES()
+        If (TextBox1.Text.Length > 0) Then
+            Dim _mesageBin = readSplit(TextBox1.Text)
+            _mesageBin = Encrypt(_mesageBin)
+            TextBox2.Text = BtoC(_mesageBin)
+
+
+
+            _mesageBin = Decrypt(TextBox2.Text)
+            TextBox3.Text = BtoC(_mesageBin)
+        Else
+            MessageBox.Show("Enter message into Input message box")
+        End If
+
+
+
+
     End Sub
 
     Function Encrypt(_mesageBin As String)
 
         MessageBox.Show("Your Message is:" & vbLf & BtoC(_mesageBin))
-        key.KeyF()
 
         Dim Tab_P_Box = Numbers_Generate(32, 200, "TableIP", True)
-        SboxClass.FillSBOXES()
         Dim spliterParts As String = ""
         Dim Stack As String = ""
         Dim left
@@ -57,22 +73,23 @@ Public Class Form1
             Next
             Stack &= spliterParts
         Next
-        
+
         MessageBox.Show("Your Encrypted Message is:" & vbLf & BtoC(Stack))
 
         Return Stack
     End Function
 
     Function Decrypt(_mesageBin As String)
+        Dim message = readSplit(_mesageBin)
         Dim Tab_P_Box = Numbers_Generate(32, 200, "TableIP", True)
         Dim spliterParts As String = ""
         Dim decrypter As String = ""
         Dim left
         Dim right
 
-        For j = 1 To _mesageBin.Length Step 64
+        For j = 1 To message.Length Step 64
 
-            spliterParts = Mid(_mesageBin, j, 64)
+            spliterParts = Mid(message, j, 64)
 
             left = Mid(spliterParts, 1, 32)
             right = Mid(spliterParts, 33, 32)
@@ -102,12 +119,12 @@ Public Class Form1
         Return decrypter
     End Function
 
-    Function readSplit()
+    Function readSplit(input As String)
 
         Dim spliter As String = ""
         Dim AscValue As Integer = 0
         Dim stored As String = ""
-        Dim MyOrgString = TextBox1.Text
+        Dim MyOrgString = input
 
         While MyOrgString.Length Mod 8 <> 0 OrElse MyOrgString.Length = 0
             MyOrgString += " "
@@ -404,7 +421,7 @@ skip:
     End Function
 
     Function MyFile()
-        Dim reader As String = System.IO.File.ReadAllText("_file22222.txt")
+        Dim reader As String = System.IO.File.ReadAllText("_file22222 - Copy.txt")
         Return reader
     End Function
 
@@ -516,8 +533,10 @@ End Class
 
 Class key
     Public Shared Key(15) As String
-    Public Shared Function KeyF()
-        Dim MessageKey = Form1.readSplit()
+    Public Shared ChaosKey(15) As String
+    Public Shared Function KeyF(chaosInput As String)
+        Dim MessageKey = Form1.readSplit(Form1.TextBox5.Text)
+        ChaosProccess(chaosInput)
 
         Dim PC1 = {57, 49, 41, 33, 25, 17, 9, 1, 58, 50, 42, 34, 26, 18,
                     10, 2, 59, 51, 43, 35, 27, 19, 11, 3, 60, 52, 44, 36,
@@ -529,7 +548,7 @@ Class key
                     41, 52, 31, 37, 47, 55, 30, 40, 51, 45, 33, 48,
                     44, 49, 39, 56, 34, 53, 46, 42, 50, 36, 29, 32}
 
-        Dim arrShiftRound = Split("1 1 2 2 2 2 2 2 1 2 2 2 2 2 2 1", " ")
+        Dim arrShiftRound = Split("1 2 2 2 2 2 2 2 1 2 2 1 2 2 2 1", " ")
         Dim ArrayKey(15) As String
         Dim arrShiftRoundINT = Array.ConvertAll(arrShiftRound, Function(str) Int32.Parse(str))
 
@@ -548,7 +567,48 @@ Class key
 
 
             Key(i) = Mid(left, 4, left.Length - 4) & Mid(left, 4, left.Length - 4)
+            Key(i) = Form1.shifting(Key(i), ChaosKey(i))
         Next
         Return 0
+    End Function
+
+    Shared Function ChaosProccess(InputR As String)
+        Dim ChaosTable = Chaos_Table(InputR, 0.48)
+        Dim random = New Random()
+        For index = 0 To ChaosKey.Length - 1
+            ChaosKey(0) = Mid(ChaosTable, random.Next(1, ChaosTable.Length - 1), 1)
+        Next
+        Return 0
+    End Function
+
+    Shared Function Chaos_Table(InputKeyR As String, InputKeyX As String) As String
+        Dim x(1000) As Double
+        Dim r As Double
+
+        x(0) = ChaosAsc(InputKeyX) Mod 0.31
+        r = ChaosAsc(InputKeyR) Mod 3.73
+        If r = 0 Then
+            r += 0.39
+        ElseIf x(0) = 0 Then
+            x(0) = 0.43
+        End If
+        For i = 0 To x.Length - 2
+
+            If Not x.Contains(x(i) * r * (1 - x(i)) Mod 1) Then
+                x(i + 1) = x(i) * r * (1 - x(i)) Mod 1
+                r = r + 0.5 Mod 4
+            End If
+        Next
+        Dim StrArray As String() = Array.ConvertAll(x, Function(y) y.ToString)
+        Return Join(StrArray, "").Replace("0.", "").Replace("00", "0").Replace("00", "0")
+
+    End Function
+
+    Shared Function ChaosAsc(Key As String)
+        Dim FullAsc As Integer = 0
+        For i = 1 To Key.Length
+            FullAsc += Asc(Mid(Key, i, 1))
+        Next
+        Return FullAsc
     End Function
 End Class
